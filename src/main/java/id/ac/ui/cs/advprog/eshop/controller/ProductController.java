@@ -1,3 +1,4 @@
+// ProductController.java
 package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.model.Product;
@@ -20,11 +21,11 @@ public class ProductController {
     public String createProductPage(Model model) {
         Product product = new Product();
         model.addAttribute("product", product);
-        return "createProduct";
+        return "CreateProduct";
     }
 
     @PostMapping("/create")
-    public String createProductPost(@ModelAttribute Product product, Model model) {
+    public String createProductPost(@ModelAttribute Product product) {
         service.create(product);
         return "redirect:/product/list";
     }
@@ -33,6 +34,32 @@ public class ProductController {
     public String productListPage(Model model) {
         List<Product> allProducts = service.findAll();
         model.addAttribute("products", allProducts);
-        return "productList";
+        return "ProductList";
+    }
+
+    // New: Show edit form
+    @GetMapping("/edit/{id}")
+    public String editProductPage(@PathVariable("id") Long id, Model model) {
+        Product product = service.findById(id);
+        if (product == null) {
+            // could add an error message here
+            return "redirect:/product/list";
+        }
+        model.addAttribute("product", product);
+        return "EditProduct";
+    }
+
+    // New: Process edit submission
+    @PostMapping("/edit")
+    public String editProductPost(@ModelAttribute Product product) {
+        service.update(product);
+        return "redirect:/product/list";
+    }
+
+    // New: Delete product
+    @GetMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable("id") Long id) {
+        service.delete(id);
+        return "redirect:/product/list";
     }
 }
