@@ -49,14 +49,15 @@ public class ProductController {
         return "EditProduct";
     }
 
-    // New: Process edit submission
+    // Edit product for commit, link ke list
     @PostMapping("/edit")
     public String editProductPost(@ModelAttribute Product product) {
         service.update(product);
         return "redirect:/product/list";
     }
 
-    // New: Delete product
+    // Del product for commit, link ke list
+
     @GetMapping("/delete/{id}")
     public String deleteProduct(@PathVariable("id") Long id) {
         service.delete(id);
