@@ -9,7 +9,7 @@ public interface ProductService {
     List<Product> findAll();
 
     // New methods:
-    Product findById(Long id);
+    Product findById(String id);
     Product update(Product product);
-    void delete(Long id);
+    void delete(String id);
 }

@@ -2,17 +2,27 @@
 package id.ac.ui.cs.advprog.eshop.model;
 
 public class Product {
-    private Long id;
+    private String productId;
     private String productName;
-    private int productQuantity; // adjust type as needed
+    private int productQuantity; // tipe integer untuk jumlah produk
 
-    // getters and setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getProductName() { return productName; }
-    public void setProductName(String productName) { this.productName = productName; }
-
-    public int getProductQuantity() { return productQuantity; }
-    public void setProductQuantity(int productQuantity) { this.productQuantity = productQuantity; }
+    // Getter dan Setter
+    public String getProductId() {
+        return productId;
+    }
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+    public String getProductName() {
+        return productName;
+    }
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+    public int getProductQuantity() {
+        return productQuantity;
+    }
+    public void setProductQuantity(int productQuantity) {
+        this.productQuantity = productQuantity;
+    }
 }

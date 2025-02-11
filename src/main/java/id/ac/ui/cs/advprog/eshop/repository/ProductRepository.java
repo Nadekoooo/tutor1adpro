@@ -1,4 +1,3 @@
-// ProductRepository.java
 package id.ac.ui.cs.advprog.eshop.repository;
 
 import id.ac.ui.cs.advprog.eshop.model.Product;
@@ -11,12 +10,12 @@ import java.util.List;
 @Repository
 public class ProductRepository {
     private List<Product> productData = new ArrayList<>();
-    private long nextId = 1; // simple auto-increment id
+    private long nextId = 1; // auto-increment sederhana untuk generate id jika tidak di-set
 
     public Product create(Product product) {
-        // assign id if not already set
-        if (product.getId() == null) {
-            product.setId(nextId++);
+        // Assign productId jika belum di-set
+        if (product.getProductId() == null) {
+            product.setProductId(String.valueOf(nextId++));
         }
         productData.add(product);
         return product;
@@ -26,9 +25,9 @@ public class ProductRepository {
         return productData.iterator();
     }
 
-    public Product findById(Long id) {
+    public Product findById(String id) {
         for (Product p : productData) {
-            if (p.getId().equals(id)) {
+            if (p.getProductId().equals(id)) {
                 return p;
             }
         }
@@ -36,7 +35,7 @@ public class ProductRepository {
     }
 
     public Product update(Product product) {
-        Product existing = findById(product.getId());
+        Product existing = findById(product.getProductId());
         if (existing != null) {
             existing.setProductName(product.getProductName());
             existing.setProductQuantity(product.getProductQuantity());
@@ -44,7 +43,7 @@ public class ProductRepository {
         return existing;
     }
 
-    public void delete(Long id) {
+    public void deleteById(String id) {
         Product product = findById(id);
         if (product != null) {
             productData.remove(product);

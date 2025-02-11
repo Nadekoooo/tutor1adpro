@@ -39,7 +39,7 @@ public class ProductController {
 
     // New: Show edit form
     @GetMapping("/edit/{id}")
-    public String editProductPage(@PathVariable("id") Long id, Model model) {
+    public String editProductPage(@PathVariable("id") String id, Model model) {
         Product product = service.findById(id);
         if (product == null) {
             // could add an error message here
@@ -59,7 +59,7 @@ public class ProductController {
     // Del product for commit, link ke list
 
     @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable("id") Long id) {
+    public String deleteProduct(@PathVariable("id") String id) {
         service.delete(id);
         return "redirect:/product/list";
     }
