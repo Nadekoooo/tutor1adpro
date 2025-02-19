@@ -10,6 +10,9 @@ jobs:
     name: Run tests
     runs-on: ubuntu-22.04
     steps:
+      - name: Add gradlew permission
+        run: chmod +x gradlew
+
       - name: Check out the Git repository
         uses: actions/checkout@v4
 
