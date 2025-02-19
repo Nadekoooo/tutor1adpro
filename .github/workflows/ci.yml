@@ -10,8 +10,6 @@ jobs:
     name: Run tests
     runs-on: ubuntu-22.04
     steps:
-      - name: Add gradlew permission
-        run: chmod +x gradlew
 
       - name: Check out the Git repository
         uses: actions/checkout@v4
@@ -22,6 +20,10 @@ jobs:
           distribution: "temurin"
           java-version: "21"
           cache: "gradle"
+
+      - name: Add gradlew permission
+        run: chmod +x gradlew
+
 
       - name: Run unit tests
         run: ./gradlew test
