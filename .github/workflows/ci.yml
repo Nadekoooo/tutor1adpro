@@ -1,10 +1,8 @@
 name: Continuous Integration (CI)
 
-# Restrict permissions for the GITHUB_TOKEN
 permissions:
   contents: read
 
-## Run CI jobs on all branches by default
 on:
   push:
   pull_request:
