@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Iterator;
 
@@ -20,6 +19,8 @@ class ProductRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        // Optionally, reinitialize the repository if needed for isolation
+        productRepository = new ProductRepository();
     }
 
     @Test
@@ -89,6 +90,7 @@ class ProductRepositoryTest {
         assertEquals("Sampo Cap Baru", updatedProduct.getProductName());
         assertEquals(150, updatedProduct.getProductQuantity());
     }
+
     @Test
     void testEditProduct_NonExistent() {
         // Scenario: Try editing a product that does not exist (Negative Test)
@@ -97,9 +99,11 @@ class ProductRepositoryTest {
         product.setProductName("Nonexistent Product");
         product.setProductQuantity(50);
 
-        productRepository.update(product); // Should not update any product
+        // Update should return null because product is not found
+        Product result = productRepository.update(product);
+        assertNull(result);
 
-        // Verify that the product list is still empty (no product to update)
+        // Verify that the repository remains empty
         Iterator<Product> productIterator = productRepository.findAll();
         assertFalse(productIterator.hasNext());
     }
@@ -118,20 +122,30 @@ class ProductRepositoryTest {
 
         // Verify that the product was deleted
         Iterator<Product> productIterator = productRepository.findAll();
-        assertFalse(productIterator.hasNext()); // No products should be left
+        assertFalse(productIterator.hasNext());
     }
 
     @Test
     void testDeleteProduct_NonExistent() {
         // Scenario: Try deleting a product that does not exist (Negative Test)
-        Product product = new Product();
-        product.setProductId("nonexistent-id");
+        productRepository.deleteById("nonexistent-id");
 
-        // Try deleting a product that doesn't exist
-        productRepository.deleteById(product.getProductId());
-
-        // Verify that the product list is still empty
+        // Verify that the repository remains empty
         Iterator<Product> productIterator = productRepository.findAll();
-        assertFalse(productIterator.hasNext()); // No products should be left
+        assertFalse(productIterator.hasNext());
+    }
+
+    @Test
+    void testFindById_NegativeCase() {
+        // Create a product with a known id.
+        Product product = new Product();
+        product.setProductId("1");
+        product.setProductName("Test Product");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        // Try to find a product with a non-matching id.
+        Product result = productRepository.findById("2");
+        assertNull(result, "Expected findById to return null when no product with the given id exists");
     }
 }
