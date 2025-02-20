@@ -1,13 +1,13 @@
 package id.ac.ui.cs.advprog.eshop;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class EshopApplicationTests {
+class EshopApplicationTest {
 
     @Test
-    void contextLoads() {
+    public void testMain() {
+        // Passing a flag to avoid starting the full web server
+        String[] args = {"--spring.main.web-application-type=none"};
+        EshopApplication.main(args);
     }
-
 }

@@ -9,11 +9,12 @@ import java.util.List;
 
 @Repository
 public class ProductRepository {
+
     private List<Product> productData = new ArrayList<>();
-    private long nextId = 1; // auto-increment sederhana untuk generate id jika tidak di-set
+    private long nextId = 1;
 
     public Product create(Product product) {
-        // Assign productId jika belum di-set
+        // Assign productId if not already set
         if (product.getProductId() == null) {
             product.setProductId(String.valueOf(nextId++));
         }
