@@ -1,3 +1,8 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
 name: pmd
 
 on:
@@ -14,18 +19,15 @@ permissions:
 jobs:
   pmd-code-scan:
     permissions:
-      contents: read       # for actions/checkout to fetch code
-      security-events: write  # for github/codeql-action/upload-sarif to upload SARIF results
-      actions: read        # required for private repos by upload-sarif to get the Action run status
+      contents: read      # For actions/checkout to fetch code
+      security-events: write  # For github/codeql-action/upload-sarif to upload SARIF results
+      actions: read       # For private repositories: required for github/codeql-action/upload-sarif to get the action run status
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
-        # Pinned to a specific commit hash
-        uses: actions/checkout@d1078b8f40a7f9a9b6d7a915f8b33b4eacb667a3
+      - uses: actions/checkout@v4
 
       - name: Set up JDK 21
-        # Pinned commit hash for setup-java (update as needed)
-        uses: actions/setup-java@08b1d73e9cc48b010243856045c2fa17d48e4e0a
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
@@ -33,8 +35,7 @@ jobs:
 
       - name: Run PMD
         id: pmd
-        # Pin the PMD action to a specific commit hash. Replace <PMD_COMMIT_HASH> with the actual commit SHA.
-        uses: pmd/pmd-github-action@<PMD_COMMIT_HASH>
+        uses: pmd/pmd-github-action@v2
         with:
           version: '7.0.0-rc4'
           rulesets: 'rulesets/java/quickstart.xml'
@@ -42,7 +43,6 @@ jobs:
           analyzeModifiedFilesOnly: false
 
       - name: Upload SARIF file
-        # Pinned commit hash for upload-sarif (example hash, update as needed)
-        uses: github/codeql-action/upload-sarif@b5e338f7ad9e4a124b0a9d5e8e6a31c7d3e8d1f9
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: pmd-report.sarif
