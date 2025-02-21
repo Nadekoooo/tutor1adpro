@@ -1,4 +1,4 @@
-# Refleksi Exercise 1
+# Refleksi Exercise 1.1
 
 ## 1. Pendahuluan
 Pada implementasi fitur edit dan delete produk, saya berupaya menerapkan prinsip-prinsip clean code dan secure coding yang telah dipelajari. Fokus utama adalah pada pemisahan tanggung jawab (separation of concerns), penggunaan dependency injection, penamaan yang konsisten, pemanfaatan Thymeleaf sebagai view resolver, serta binding dan validasi input.
@@ -43,7 +43,7 @@ Pada implementasi fitur edit dan delete produk, saya berupaya menerapkan prinsip
 
 
 
-# Reflection 2: Unit Testing & Functional Test Code Cleanliness
+# Reflection 1.2: Unit Testing & Functional Test Code Cleanliness
 
 1. ## Setelah Menulis Unit Test
 Setelah menulis unit test, saya merasa lebih percaya diri dengan kualitas kode yang telah dibuat. Unit test membantu mendeteksi bug sejak dini dan memberikan dasar yang kuat untuk refactoring serta pengembangan fitur baru.
@@ -67,3 +67,37 @@ Setelah menulis *CreateProductFunctionalTest.java*, jika diminta membuat functio
 ## Kesimpulan
 Meskipun unit test dan functional test membantu memastikan stabilitas aplikasi dan mencapai code coverage tinggi adalah hal yang baik, 100% code coverage tidak menjamin bebas bug. Kita perlu untuk mereview kode, menghindari dupe, dan memahami kode sehingga testing berjalan dengan baik dan optimal.
 
+# Refleksi 2.1: CI/CD, Analisis Kode, dan Deploy Otomatis
+
+## 1. Perbaikan Isu Kualitas Kode
+
+- **Dependency Action Pinning:**
+  - *Masalah:* Awalnya workflow menggunakan tag versi (misalnya `@v4`) tanpa dipin ke commit hash tertentu, yang dapat menyebabkan ketidakpastian dan potensi masalah keamanan.
+  - *Solusi:* Mengupdate file workflow untuk menggunakan commit hash spesifik pada action seperti `actions/checkout` dan `actions/setup-java`, sehingga memastikan dependensi yang konsisten dan aman.
+
+- **Pengaturan Token Permissions:**
+  - *Masalah:* Workflow CI awal tidak memiliki blok `permissions` di tingkat atas, sehingga GITHUB_TOKEN memiliki akses yang terlalu luas.
+  - *Solusi:* Menambahkan blok `permissions: { contents: read }` untuk membatasi akses token hanya untuk keperluan membaca konten repositori.
+
+- **Integrasi Alat Analisis Statis:**
+  - *Masalah:* Tidak adanya integrasi alat analisis statis yang otomatis untuk mendeteksi potensi masalah kualitas dan keamanan kode.
+  - *Solusi:* Mengintegrasikan PMD dan CodeQL dalam workflow untuk menjalankan analisis secara otomatis dan menghasilkan laporan SARIF.
+
+- **Coverage Test yang Kurang Lengkap:**
+  - *Masalah:* Beberapa cabang logika, terutama skenario negatif (misalnya pencarian produk yang tidak ada), tidak tercakup dalam test suite.
+  - *Solusi:* Menambahkan test case tambahan untuk memastikan bahwa setiap alur, baik positif maupun negatif, telah diuji secara menyeluruh.
+
+- **CII Best Practice:**
+  - *Masalah:* Di sini memerlukan badge best practice di web, hal ini terdapat pada website https://www.bestpractices.dev, di sini memerlukan beberapa penyesuaian kode.
+  - *Solusi:* Saya menyelesaikan semua basic testcase, dan badge sudah berhasil didapatkan di sini.
+
+## 2. Evaluasi Implementasi CI/CD
+
+Implementasi CI/CD saat ini telah memenuhi definisi Continuous Integration dan Continuous Deployment karena setiap perubahan pada kode secara otomatis memicu proses build, pengujian, dan analisis kualitas kode. 
+Pada repo ini setiap commit diuji secara otomatis, sehingga potensi bug atau kesalahan dapat segera dideteksi dan diperbaiki sebelum integrasi ke branch utama. 
+Pipeline yang ada memberikan umpan balik cepat kepada tim pengembang sehingga proses perbaikan dan refactoring dapat dilakukan secara efisien. 
+Selain itu, deployment otomatis ke lingkungan produksi melalui PaaS memastikan bahwa kode terbaru langsung dirilis tanpa intervensi manual. Dengan proses ini, kualitas aplikasi meningkat dan risiko kesalahan produksi dapat diminimalkan.
+
+## 3. Kesimpulan
+
+Implementasi CI/CD ini telah meningkatkan kualitas dan keandalan pengembangan aplikasi. Dengan otomatisasi pengujian, analisis kualitas, dan deployment, proses rilis menjadi lebih cepat, aman, dan konsisten. Integrasi dengan alat analisis statis dan penambahan test case untuk berbagai skenario (positif, negatif, dan edge case) membantu memastikan bahwa setiap perubahan diuji dengan baik sebelum di-deploy ke lingkungan produksi.
