@@ -1,7 +1,11 @@
 FROM docker.io/library/eclipse-temurin:21-jdk-alpine AS builder
 WORKDIR /src/advshop
+
+# Copy all project files
 COPY . .
-RUN ./gradlew clean bootJar
+
+# Make gradlew script executable and then run it
+RUN chmod +x gradlew && ./gradlew clean bootJar
 
 FROM docker.io/library/eclipse-temurin:21-jre-alpine AS runner
 ARG USER_NAME=advshop
@@ -13,7 +17,10 @@ RUN addgroup -g ${USER_GID} ${USER_NAME} \
 
 USER ${USER_NAME}
 WORKDIR /opt/advshop
+
+# Copy the final jar from the builder stage
 COPY --from=builder --chown=${USER_UID}:${USER_GID} /src/advshop/build/libs/*.jar app.jar
+
 EXPOSE 8080
 ENTRYPOINT ["java"]
 CMD ["-jar", "app.jar"]
