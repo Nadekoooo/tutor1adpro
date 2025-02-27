@@ -50,4 +50,16 @@ public class ProductRepository {
             productData.remove(product);
         }
     }
+
+    public Product edit(Product updatedProduct) {
+        for (Product product : productData) {
+            if (product.getProductId().equals(updatedProduct.getProductId())) {
+                updatedProduct.setProductId(product.getProductId());
+                int index = productData.indexOf(product);
+                productData.set(index, updatedProduct);
+                return updatedProduct;
+            }
+        }
+        return null;
+    }
 }
