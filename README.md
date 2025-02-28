@@ -101,3 +101,23 @@ Selain itu, deployment otomatis ke lingkungan produksi melalui PaaS memastikan b
 ## 3. Kesimpulan
 
 Implementasi CI/CD ini telah meningkatkan kualitas dan keandalan pengembangan aplikasi. Dengan otomatisasi pengujian, analisis kualitas, dan deployment, proses rilis menjadi lebih cepat, aman, dan konsisten. Integrasi dengan alat analisis statis dan penambahan test case untuk berbagai skenario (positif, negatif, dan edge case) membantu memastikan bahwa setiap perubahan diuji dengan baik sebelum di-deploy ke lingkungan produksi.
+
+
+# Refleksi 3: OO Principles & Software Maintainability
+
+## 1) Prinsip SOLID yang Diterapkan dalam Proyek
+
+Dalam proyek ini, saya menerapkan beberapa prinsip SOLID, di antaranya adalah Single Responsibility Principle (SRP), Open/Closed Principle (OCP), dan Dependency Inversion Principle (DIP). SRP memastikan bahwa setiap kelas memiliki satu tanggung jawab yang jelas, misalnya kelas `CarRepository` hanya bertugas mengelola data mobil tanpa mencampur logika lain seperti validasi atau pembuatan objek. Dengan OCP, kode dapat diperluas tanpa mengubah kode yang sudah ada, contohnya ketika menambahkan fitur baru pada repository tanpa mengubah logika dasar operasi CRUD. DIP diterapkan agar modul tingkat tinggi tidak bergantung pada modul tingkat rendah secara langsung, sehingga komponen-komponen dalam proyek bisa saling menggantikan dan diuji secara independen. Selain itu, prinsip Interface Segregation Principle (ISP) juga dipertimbangkan ketika mendesain antarmuka, sehingga pengguna kelas tidak dipaksa bergantung pada metode yang tidak mereka butuhkan. Prinsip SOLID ini membantu dalam menciptakan arsitektur yang modular dan fleksibel, memudahkan pemeliharaan dan pengembangan lebih lanjut. Dengan menerapkan prinsip-prinsip tersebut, proyek menjadi lebih scalable dan mudah diadaptasi sesuai perubahan kebutuhan.
+
+## 2) Keuntungan Menerapkan Prinsip SOLID pada Proyek
+
+Menerapkan prinsip SOLID memberikan banyak keuntungan yang signifikan bagi pengembangan proyek. Pertama, kode menjadi lebih mudah dipahami karena setiap kelas memiliki tanggung jawab tunggal, yang mengurangi kompleksitas dan memudahkan debugging. Contohnya, dengan SRP, perubahan pada logika repository tidak akan berdampak pada kelas lain yang tidak terkait. Kedua, penerapan OCP memungkinkan pengembang untuk menambahkan fitur baru tanpa merusak fungsionalitas yang sudah ada, sehingga meningkatkan kestabilan sistem. Selain itu, DIP dan ISP membuat komponen-komponen proyek lebih loosely coupled, sehingga perubahan pada satu komponen tidak menimbulkan efek domino pada komponen lainnya. Hal ini memudahkan pengujian unit secara terpisah dan meningkatkan keandalan sistem secara keseluruhan. Penggunaan SOLID juga meningkatkan fleksibilitas dalam hal pemeliharaan, karena struktur kode yang modular memungkinkan tim untuk mengerjakan bagian tertentu secara independen. Secara keseluruhan, penerapan SOLID membuat proyek lebih mudah dikembangkan, dipelihara, dan disesuaikan dengan kebutuhan bisnis yang berubah.
+
+## 3) Kerugian Tidak Menerapkan Prinsip SOLID pada Proyek
+
+Tidak menerapkan prinsip SOLID dapat menyebabkan beberapa masalah serius dalam pengembangan perangkat lunak. Pertama, jika sebuah kelas memiliki lebih dari satu tanggung jawab (melanggar SRP), maka perubahan pada satu fungsi dapat mempengaruhi fungsi lainnya, sehingga meningkatkan risiko bug. Misalnya, jika logika validasi dicampur dengan logika penyimpanan data dalam `CarRepository`, maka kesalahan dalam validasi dapat memengaruhi operasi CRUD secara keseluruhan. Kedua, tanpa OCP, setiap kali ada penambahan fitur baru, kode yang sudah ada perlu dimodifikasi secara langsung, yang meningkatkan risiko regresi dan menurunkan stabilitas sistem. Ketiga, tanpa DIP, komponen-komponen dalam sistem akan sangat bergantung satu sama lain, sehingga membuat refactoring atau penggantian modul menjadi sulit dan berisiko. Selain itu, pengujian unit menjadi lebih kompleks karena keterkaitan yang erat antara kelas, sehingga meningkatkan waktu dan biaya pengujian. Akhirnya, struktur kode yang tidak modular menyebabkan sulitnya pemeliharaan dan skalabilitas, sehingga proyek sulit untuk berkembang seiring dengan perubahan kebutuhan bisnis. Secara keseluruhan, tidak menerapkan prinsip SOLID dapat mengakibatkan sistem yang rapuh, sulit dipelihara, dan rentan terhadap bug.
+
+
+
+
+
