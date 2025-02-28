@@ -42,10 +42,15 @@ public class CarRepository {
                 car.setCarName(updatedCar.getCarName());
                 car.setCarColor(updatedCar.getCarColor());
                 car.setCarQuantity(updatedCar.getCarQuantity());
+
+                // Return the updated Car right after changing its fields
+                return car;
             }
         }
+        // If no matching Car is found, return null
         return null;
     }
+
 
     public void delete(String id) {
         carData.removeIf(car -> car.getCarId().equals(id));

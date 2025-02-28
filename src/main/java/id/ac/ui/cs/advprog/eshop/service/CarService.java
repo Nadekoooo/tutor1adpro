@@ -5,15 +5,15 @@ import id.ac.ui.cs.advprog.eshop.model.Car;
 import java.util.List;
 
 public interface CarService {
+    Car create(Car car);
 
-    public Car create(Car car);
-
-    public List<Car> findAll();
+    List<Car> findAll();
 
     Car findById(String carId);
 
-    public void update(String carId, Car car);
+    Car update(String carId, Car car);
 
-    public void deleteCarById(String id);
+    Car updateCarAndReturn(String carId, Car car);  // <-- NEW method
 
+    void deleteCarById(String id);
 }

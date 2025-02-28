@@ -87,4 +87,42 @@ ProductServiceTest {
         // Pastikan repository masih kosong (jika belum ada produk yang disimpan sebelumnya)
         assertTrue(productService.findAll().isEmpty(), "Repository harus tetap kosong setelah menghapus produk yang tidak ada");
     }
+
+    @Test
+    public void testEditProductUsingEditMethod_Positive() {
+        // Arrange: Create a product and save it.
+        Product product = new Product();
+        product.setProductId(null);
+        product.setProductName("Produk A");
+        product.setProductQuantity(10);
+        Product createdProduct = productService.create(product);
+        assertNotNull(createdProduct.getProductId(), "Produk harus memiliki id setelah disimpan");
+
+        // Act: Modify the product and trigger the edit path.
+        createdProduct.setProductName("Produk A Updated");
+        createdProduct.setProductQuantity(20);
+        // Call the service's edit method directly to trigger productRepository.edit(product)
+        Product updatedProduct = productService.edit(createdProduct);
+
+        // Assert: Verify that the product is updated.
+        assertNotNull(updatedProduct, "Produk yang diupdate tidak boleh null");
+        assertEquals("Produk A Updated", updatedProduct.getProductName(), "Nama produk harus terupdate");
+        assertEquals(20, updatedProduct.getProductQuantity(), "Jumlah produk harus terupdate");
+    }
+
+    @Test
+    public void testEditProductUsingEditMethod_Negative() {
+        // Arrange: Prepare a product with an id that does not exist in the repository.
+        Product product = new Product();
+        product.setProductId("nonexistent-id");
+        product.setProductName("Non Existent Product");
+        product.setProductQuantity(5);
+
+        // Act: Attempt to edit the product.
+        Product updatedProduct = productService.edit(product);
+
+        // Assert: The edit method should return null since the product does not exist.
+        assertNull(updatedProduct, "Edit harus mengembalikan null untuk produk yang tidak ada");
+    }
+
 }

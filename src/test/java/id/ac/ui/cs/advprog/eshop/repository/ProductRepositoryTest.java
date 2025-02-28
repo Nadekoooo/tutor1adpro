@@ -72,24 +72,50 @@ class ProductRepositoryTest {
 
     @Test
     void testEditProduct() {
-        // Scenario: Edit Product (Positive Test)
+        // Create a product
         Product product = new Product();
-        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-        product.setProductName("Sampo Cap Bambang");
-        product.setProductQuantity(100);
+        product.setProductId("1234");
+        product.setProductName("Old Name");
+        product.setProductQuantity(10);
         productRepository.create(product);
 
-        // Edit product
-        product.setProductName("Sampo Cap Baru");
-        product.setProductQuantity(150);
-        productRepository.update(product);
+        // Edit the product
+        product.setProductName("New Name");
+        product.setProductQuantity(20);
+        Product editedProduct = productRepository.edit(product);
 
-        // Verify the updated values
-        Iterator<Product> productIterator = productRepository.findAll();
-        Product updatedProduct = productIterator.next();
-        assertEquals("Sampo Cap Baru", updatedProduct.getProductName());
-        assertEquals(150, updatedProduct.getProductQuantity());
+        // Verify changes
+        assertNotNull(editedProduct);
+        assertEquals("1234", editedProduct.getProductId());
+        assertEquals("New Name", editedProduct.getProductName());
+        assertEquals(20, editedProduct.getProductQuantity());
     }
+
+    @Test
+    void testEditWithTwoProducts() {
+        // 1) Create two products
+        Product p1 = new Product();
+        p1.setProductId("p1");
+        productRepository.create(p1);
+
+        Product p2 = new Product();
+        p2.setProductId("p2");
+        productRepository.create(p2);
+
+        // 2) Edit the second product so we skip over the first
+        p2.setProductName("Updated P2");
+        Product edited = productRepository.edit(p2);
+
+        // 3) Verify the loop checks p1 (condition = false), then p2 (condition = true)
+        assertNotNull(edited);
+        assertEquals("p2", edited.getProductId());
+        assertEquals("Updated P2", edited.getProductName());
+
+        // Also verify p1 remains unchanged
+        Product stillP1 = productRepository.findById("p1");
+        assertEquals("p1", stillP1.getProductId());
+    }
+
 
     @Test
     void testEditProduct_NonExistent() {
