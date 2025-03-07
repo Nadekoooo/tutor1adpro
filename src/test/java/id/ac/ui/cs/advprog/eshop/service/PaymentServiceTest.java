@@ -7,12 +7,10 @@ import id.ac.ui.cs.advprog.eshop.repository.PaymentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -29,11 +27,11 @@ class PaymentServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    // Helper method to create a dummy products list
+    // Helper method to create a dummy products list.
     private List<Product> createDummyProducts() {
         List<Product> products = new ArrayList<>();
         Product product = new Product();
-        product.setProductId("dummy-product");
+        product.setProductId("prod-1");
         product.setProductName("Dummy Product");
         product.setProductQuantity(1);
         products.add(product);
@@ -45,20 +43,18 @@ class PaymentServiceTest {
         List<Product> products = createDummyProducts();
         Order order = new Order("order-1", products, 0L, "Author");
 
-        // Mock: return the passed Payment when saving
         doAnswer(invocation -> invocation.getArgument(0))
                 .when(paymentRepository).save(any(Payment.class));
 
         Map<String, String> data = new HashMap<>();
-        // Updated voucher code to 16 characters
         data.put("voucherCode", "ESHOP1234ABC5678"); // valid voucher code
 
         Payment payment = paymentService.addPayment(order, "VOUCHER", data);
-        verify(paymentRepository, times(1)).save(any(Payment.class));
-        assertEquals("SUCCESS", payment.getStatus());
-        assertEquals("SUCCESS", order.getStatus()); // order updated
-    }
 
+        verify(paymentRepository, times(1)).save(any(Payment.class));
+        assertEquals("SUCCESS", payment.getStatus(), "Payment status should be SUCCESS for valid voucher");
+        assertEquals("SUCCESS", order.getStatus(), "Order status should be updated to SUCCESS");
+    }
 
     @Test
     void testAddPaymentRejectedVoucher() {
@@ -69,12 +65,53 @@ class PaymentServiceTest {
                 .when(paymentRepository).save(any(Payment.class));
 
         Map<String, String> data = new HashMap<>();
-        data.put("voucherCode", "INVALID-CODE");
+        data.put("voucherCode", "INVALIDCODE123"); // invalid voucher
+
         Payment payment = paymentService.addPayment(order, "VOUCHER", data);
 
-        assertEquals("REJECTED", payment.getStatus());
-        assertEquals("FAILED", order.getStatus()); // order updated
+        verify(paymentRepository, times(1)).save(any(Payment.class));
+        assertEquals("REJECTED", payment.getStatus(), "Payment status should be REJECTED for invalid voucher");
+        assertEquals("FAILED", order.getStatus(), "Order status should be updated to FAILED");
     }
+
+    @Test
+    void testAddPaymentSuccessBankTransfer() {
+        List<Product> products = createDummyProducts();
+        Order order = new Order("order-3", products, 0L, "Author");
+
+        doAnswer(invocation -> invocation.getArgument(0))
+                .when(paymentRepository).save(any(Payment.class));
+
+        Map<String, String> data = new HashMap<>();
+        data.put("bankName", "BankXYZ");
+        data.put("referenceCode", "REF12345");
+
+        Payment payment = paymentService.addPayment(order, "BANK_TRANSFER", data);
+
+        verify(paymentRepository, times(1)).save(any(Payment.class));
+        assertEquals("SUCCESS", payment.getStatus(), "Valid bank transfer should yield SUCCESS status");
+        assertEquals("SUCCESS", order.getStatus(), "Order status should be updated to SUCCESS");
+    }
+
+    @Test
+    void testAddPaymentRejectedBankTransfer() {
+        List<Product> products = createDummyProducts();
+        Order order = new Order("order-4", products, 0L, "Author");
+
+        doAnswer(invocation -> invocation.getArgument(0))
+                .when(paymentRepository).save(any(Payment.class));
+
+        Map<String, String> data = new HashMap<>();
+        data.put("bankName", ""); // empty bankName causes rejection
+        data.put("referenceCode", "REF12345");
+
+        Payment payment = paymentService.addPayment(order, "BANK_TRANSFER", data);
+
+        verify(paymentRepository, times(1)).save(any(Payment.class));
+        assertEquals("REJECTED", payment.getStatus(), "Missing bankName should yield REJECTED status");
+        assertEquals("FAILED", order.getStatus(), "Order status should be updated to FAILED");
+    }
+
     @Test
     void testGetPayment() {
         Payment payment = new Payment("pay-5", "VOUCHER", Map.of("voucherCode", "ESHOP1234ABC5678"));
@@ -82,7 +119,7 @@ class PaymentServiceTest {
 
         Payment result = paymentService.getPayment("pay-5");
         assertNotNull(result);
-        assertEquals("pay-5", result.getId());
+        assertEquals("pay-5", result.getId(), "Retrieved payment should have the expected id");
     }
 
     @Test
@@ -91,21 +128,17 @@ class PaymentServiceTest {
         Payment payment2 = new Payment("pay-7", "BANK_TRANSFER", Map.of("bankName", "BankXYZ", "referenceCode", "REF12345"));
         when(paymentRepository.findAll()).thenReturn(List.of(payment1, payment2));
 
-        assertEquals(2, paymentService.getAllPayments().size());
+        List<Payment> results = paymentService.getAllPayments();
+        assertEquals(2, results.size(), "Expected to retrieve two payments");
     }
 
     @Test
     void testSetStatusUpdatesPayment() {
-        // Create a dummy payment (assume its initial status is SUCCESS from valid voucher code)
         Payment payment = new Payment("pay-8", "VOUCHER", Map.of("voucherCode", "ESHOP1234ABC5678"));
-
-        // For this test, assume the PaymentServiceImpl.setStatus method simply updates the payment's status.
         doAnswer(invocation -> invocation.getArgument(0))
                 .when(paymentRepository).save(any(Payment.class));
 
         Payment updatedPayment = paymentService.setStatus(payment, "REJECTED");
-        assertEquals("REJECTED", updatedPayment.getStatus());
-        // If your setStatus method also updates the related Order, add similar assertions for the Order.
+        assertEquals("REJECTED", updatedPayment.getStatus(), "Payment status should be updated to REJECTED");
     }
-    // Similar tests for BANK_TRANSFER, setStatus, getPayment, getAllPayments, etc.
 }
