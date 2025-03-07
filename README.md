@@ -118,6 +118,41 @@ Menerapkan prinsip SOLID memberikan banyak keuntungan yang signifikan bagi penge
 Tidak menerapkan prinsip SOLID dapat menyebabkan beberapa masalah serius dalam pengembangan perangkat lunak. Pertama, jika sebuah kelas memiliki lebih dari satu tanggung jawab (melanggar SRP), maka perubahan pada satu fungsi dapat mempengaruhi fungsi lainnya, sehingga meningkatkan risiko bug. Misalnya, jika logika validasi dicampur dengan logika penyimpanan data dalam `CarRepository`, maka kesalahan dalam validasi dapat memengaruhi operasi CRUD secara keseluruhan. Kedua, tanpa OCP, setiap kali ada penambahan fitur baru, kode yang sudah ada perlu dimodifikasi secara langsung, yang meningkatkan risiko regresi dan menurunkan stabilitas sistem. Ketiga, tanpa DIP, komponen-komponen dalam sistem akan sangat bergantung satu sama lain, sehingga membuat refactoring atau penggantian modul menjadi sulit dan berisiko. Selain itu, pengujian unit menjadi lebih kompleks karena keterkaitan yang erat antara kelas, sehingga meningkatkan waktu dan biaya pengujian. Akhirnya, struktur kode yang tidak modular menyebabkan sulitnya pemeliharaan dan skalabilitas, sehingga proyek sulit untuk berkembang seiring dengan perubahan kebutuhan bisnis. Secara keseluruhan, tidak menerapkan prinsip SOLID dapat mengakibatkan sistem yang rapuh, sulit dipelihara, dan rentan terhadap bug.
 
 
+# Refleksi 4: Test-Driven Development & Refactoring
 
 
+## Evaluasi TDD Workflow Berdasarkan Percival (2017)
+
+Menurut Percival (2017) dalam "Principles and Best Practice of Testing", alur TDD memiliki beberapa keuntungan yang signifikan, antara lain:
+
+- **Feedback Cepat:** Dengan menulis test terlebih dahulu, saya mendapatkan umpan balik yang cepat mengenai apakah kode yang ditulis sudah memenuhi spesifikasi. Hal ini membantu mendeteksi kesalahan sejak dini.
+- **Desain Kode yang Lebih Baik:** TDD mendorong saya untuk membuat desain kode yang modular dan terpisah dengan baik, sehingga memudahkan proses pemeliharaan dan pengembangan di masa mendatang.
+- **Kepercayaan pada Kode:** Dengan adanya test yang telah lulus, saya merasa lebih yakin bahwa perubahan pada kode tidak akan merusak fungsionalitas yang sudah ada.
+
+Namun, ada beberapa hal yang perlu diperbaiki untuk iterasi TDD selanjutnya:
+- **Coverage Test yang Lebih Lengkap:** Saya harus memastikan semua skenario, terutama edge case, sudah tercakup dalam test.
+- **Refactoring Test Secara Berkala:** Seiring dengan perubahan kode, test harus direview dan direfaktor agar tetap relevan dan mudah dipahami.
+- **Dokumentasi Test yang Lebih Jelas:** Penulisan dokumentasi pada setiap test perlu diperbaiki agar anggota tim lain dapat dengan mudah memahami maksud dari masing-masing test.
+
+## Evaluasi Penerapan Prinsip F.I.R.S.T
+
+Prinsip F.I.R.S.T (Fast, Independent, Repeatable, Self-Validating, Timely) merupakan panduan yang baik untuk menulis unit test. Berdasarkan implementasi saat ini:
+
+- **Fast:** Test berjalan dengan cepat karena hanya menguji unit-unit kecil dengan bantuan mocking untuk komponen eksternal.
+- **Independent:** Setiap test sudah berjalan secara independen tanpa saling bergantung, sehingga hasil test tidak dipengaruhi oleh urutan eksekusi test.
+- **Repeatable:** Test dapat dijalankan berulang kali dengan hasil yang konsisten selama lingkungan testing tidak berubah.
+- **Self-Validating:** Setiap test memiliki asersi yang jelas sehingga hasilnya langsung dapat dinilai (pass/fail) tanpa perlu interpretasi manual.
+- **Timely:** Test ditulis sesuai dengan prinsip TDD, yaitu sebelum implementasi kode, sehingga membantu memandu proses pengembangan.
+
+Meskipun penerapan prinsip F.I.R.S.T sudah cukup baik, ada beberapa area untuk peningkatan:
+- **Keterbacaan dan Penamaan Test:** Saya perlu memperbaiki nama-nama test dan struktur kode test agar lebih mudah dipahami oleh semua anggota tim.
+- **Pesan Error yang Lebih Informatif:** Setiap asersi sebaiknya dilengkapi dengan pesan error yang jelas agar proses debugging bisa dilakukan dengan lebih efisien.
+- **Cakupan Test untuk Edge Case:** Menambahkan skenario test untuk kondisi-kondisi yang jarang terjadi namun berpotensi menimbulkan bug.
+
+## Kesimpulan
+
+Secara keseluruhan, alur TDD yang saya terapkan sangat berguna untuk memastikan kualitas dan keandalan kode. Namun, ke depannya saya akan:
+- Menulis test dengan penamaan yang lebih deskriptif dan terstruktur.
+- Memperluas cakupan test untuk mencakup lebih banyak edge case.
+- Memperbaiki dokumentasi dan pesan error pada test untuk memudahkan proses debugging.
 
