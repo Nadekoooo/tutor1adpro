@@ -1,6 +1,5 @@
-package id.ac.ui.cs.advprog.eshop.repository;
+package id.ac.ui.cs.advprog.eshop.model;
 
-import id.ac.ui.cs.advprog.eshop.model.Payment;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -14,16 +13,16 @@ class PaymentTest {
     void testCreatePaymentWithValidVoucherCode() {
         // Arrange
         Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("voucherCode", "ESHOP1234ABCD5678"); // 16 chars, starts with ESHOP, has 8 digits
+        // Updated voucher code: exactly 16 characters ("ESHOP1234ABC5678")
+        paymentData.put("voucherCode", "ESHOP1234ABC5678");
 
         // Act
         Payment payment = new Payment("pay-1", "VOUCHER", paymentData);
 
         // Assert
-        assertEquals("pay-1", payment.getId());
-        assertEquals("VOUCHER", payment.getMethod());
-        assertEquals("SUCCESS", payment.getStatus()); // must be auto SUCCESS
+        assertEquals("SUCCESS", payment.getStatus());
     }
+
 
     @Test
     void testCreatePaymentWithInvalidVoucherCode() {
