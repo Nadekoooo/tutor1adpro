@@ -56,7 +56,7 @@ class OrderTest {
 
     // 5. Create a happy path test: Test to create the order with no status defined.
     @Test
-    void testCreateOrderNoDefaultStatus() {
+    void testCreateOrderDefaultStatus() {
         Order order = new Order(
                 "13652556-012a-4c87-b546-54eb1396d79b",
                 this.products,
@@ -64,10 +64,11 @@ class OrderTest {
                 "Safira Sudrajat"
         );
 
+        assertEquals(2, order.getProducts().size());
         assertEquals("Sampo Cap Bambang", order.getProducts().get(0).getProductName());
         assertEquals("Sabun Cap Uyee", order.getProducts().get(1).getProductName());
         assertEquals("13652556-012a-4c87-b546-54eb1396d79b", order.getId());
-        assertEquals(1708560000L, order.getCreatedAt());
+        assertEquals(1708560000L, order.getOrderTime());
         assertEquals("Safira Sudrajat", order.getAuthor());
         assertEquals("WAITING_PAYMENT", order.getStatus());
     }
