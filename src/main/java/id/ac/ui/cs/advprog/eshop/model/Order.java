@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.eshop.model;
 
+import enums.OrderStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,34 +23,27 @@ public class Order {
         this.id = id;
         this.orderTime = orderTime;
         this.author = author;
-        this.status = "WAITING_PAYMENT";
+        this.status = OrderStatus.WAITING_PAYMENT.getValue();
+
         if (products.isEmpty()) {
-            throw new IllegalArgumentException("Products cannot be empty.");
+            throw new IllegalArgumentException();
+        } else {
+            this.products = products;
         }
-        this.products = products;
     }
 
     public Order(String id, List<Product> products, Long orderTime, String author, String status) {
-        this.id = id;
-        this.orderTime = orderTime;
-        this.author = author;
-        String[] statuses = {"WAITING_PAYMENT", "FAILED", "SUCCESS", "CANCELLED"};
-        if (Arrays.stream(statuses).noneMatch(item -> item.equals(status))) {
-            throw new IllegalArgumentException("Invalid status: " + status);
-        }
-        this.status = status;
-        if (products.isEmpty()) {
-            throw new IllegalArgumentException("Products cannot be empty.");
-        }
-        this.products = products;
+        this(id, products, orderTime, author);
+        this.setStatus(status);
     }
 
     public void setStatus(String status) {
-        String[] statuses = {"WAITING_PAYMENT", "FAILED", "SUCCESS", "CANCELLED"};
-        if (Arrays.stream(statuses).noneMatch(item -> item.equals(status))) {
-            throw new IllegalArgumentException("Invalid status: " + status);
+        if (OrderStatus.contains(status)) {
+            this.status = status;
+        } else {
+            throw new IllegalArgumentException();
         }
-        this.status = status;
     }
+
 
 }
