@@ -61,22 +61,19 @@ public class Payment {
         }
         return (digitCount == 8);
     }
-
-    // Getters
+    public void setStatus(String status) {
+        this.status = status;
+    }
     public String getId() {
-        return id;
+        return this.id;
     }
-
-    public String getMethod() {
-        return method;
-    }
-
     public String getStatus() {
-        return status;
+        return this.status;
+    }
+    public String getMethod() {
+        return this.method;
     }
 
-    public Map<String, String> getPaymentData() {
-        return paymentData;
-    }
+
 }
 
