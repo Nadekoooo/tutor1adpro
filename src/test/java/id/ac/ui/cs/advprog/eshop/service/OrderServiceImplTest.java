@@ -1,9 +1,23 @@
-package id.ac.ui.cs.advprog.eshop.repository;
+package id.ac.ui.cs.advprog.eshop.service;
 
+import enums.OrderStatus;
 import id.ac.ui.cs.advprog.eshop.model.Order;
+import id.ac.ui.cs.advprog.eshop.model.Product;
+import id.ac.ui.cs.advprog.eshop.repository.OrderRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
-class OrderServiceTest {
+class OrderServiceImplTest {
 
     @InjectMocks
     OrderServiceImpl orderService;
@@ -83,6 +97,46 @@ class OrderServiceTest {
 
         verify(orderRepository, times(0)).save(any(Order.class));
     }
+    @Test
+    void testUpdateStatusInvalidOrderId() {
+        doReturn(null).when(orderRepository).findById("zzcc");
+
+        assertThrows(NoSuchElementException.class,
+                () -> orderService.updateStatus("zzcc", OrderStatus.SUCCESS.getValue()));
+
+        verify(orderRepository, times(0)).save(any(Order.class));
+    }
+
+    @Test
+    void testFindByIdIfFound() {
+        Order order = orders.get(1);
+        doReturn(order).when(orderRepository).findById(order.getId());
+
+        Order result = orderService.findById(order.getId());
+        assertEquals(order.getId(), result.getId());
+    }
+
+    @Test
+    void testFindByIdIfNotFound() {
+        doReturn(null).when(orderRepository).findById("zzcc");
+
+        assertNull(orderService.findById("zzcc"));
+    }
+
+    @Test
+    void testFindAllByAuthorIfAuthorCorrect() {
+        Order order = orders.get(1);
+        doReturn(orders).when(orderRepository).findAllByAuthor(order.getAuthor());
+
+        List<Order> results = orderService.findAllByAuthor(order.getAuthor());
+        for (Order result : results) {
+            assertEquals(order.getAuthor(), result.getAuthor());
+        }
+        assertEquals(2, results.size());
+    }
+
+
+
 
     @Test
     void testFindAllByAuthorIfAllLowercase() {
@@ -94,6 +148,5 @@ class OrderServiceTest {
                 order.getAuthor().toLowerCase());
         assertTrue(results.isEmpty());
     }
-
 
 }
